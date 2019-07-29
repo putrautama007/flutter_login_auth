@@ -13,11 +13,9 @@ class ApiProvider{
 
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.error:
-//        onLoginStatusChanged(false);
       return LoginStatus(false);
         break;
       case FacebookLoginStatus.cancelledByUser:
-//        onLoginStatusChanged(false);
         return LoginStatus(false);
         break;
       case FacebookLoginStatus.loggedIn:
@@ -29,8 +27,6 @@ class ApiProvider{
             .accessToken.token}");
         var profile = json.decode(graphResponse.body);
         print(profile.toString());
-
-//        onLoginStatusChanged(true, profileData: profile);
         return LoginStatus(true, profile: Profile.fromJson(profile));
         break;
     }

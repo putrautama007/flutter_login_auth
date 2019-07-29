@@ -12,6 +12,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   final facebookLoginBloc = FacebookLoginBloc();
+  bool _load = false;
+
+
+  setLoading(){
+    setState(() {
+      _load =false;
+    });
+  }
 
   @override
   void initState() {
@@ -27,16 +35,26 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator =_load?  Container(
+      child:  Padding(padding:  EdgeInsets.all(5.0),child:  Center(child:  CircularProgressIndicator(
+        backgroundColor: Colors.red,
+      ))),
+    ): Container();
     return Scaffold(
       appBar: AppBar(
         title: Text("Flutter Facebook Login"),
       ),
-      body: Center(
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: loginButton(),
-        ),
-      ),
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: loginButton(),
+            ),
+          ),
+          Align(child: loadingIndicator,alignment: FractionalOffset.center,),
+        ],
+      )
     );
   }
 
@@ -81,9 +99,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           onTap: () {
+            setState((){
+              _load=true;
+            });
             facebookLoginBloc.getFacebookData();
             facebookLoginBloc.facebookProfile.listen((data){
-              openDetailPage(data.profile);
+              if(data.profile != null)
+                openDetailPage(data.profile);
+              else setLoading();
             });
           },
         ),
@@ -92,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   openDetailPage(Profile data) {
+    setLoading();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) {

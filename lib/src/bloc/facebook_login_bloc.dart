@@ -7,18 +7,18 @@ import 'base_bloc.dart';
 
 class FacebookLoginBloc extends BaseBloc{
   final _repository = Repository();
-  final _facebookLoginfetcher = PublishSubject<LoginStatus>();
+  final _facebookLoginFetcher = PublishSubject<LoginStatus>();
   
-  Observable<LoginStatus> get facebookProfile => _facebookLoginfetcher.stream;
+  Observable<LoginStatus> get facebookProfile => _facebookLoginFetcher.stream;
 
   getFacebookData() async{
     LoginStatus loginStatus = await _repository.facebookLogin();
-    _facebookLoginfetcher.sink.add(loginStatus);
+    _facebookLoginFetcher.sink.add(loginStatus);
   }
   
   @override
   dispose() {
-    _facebookLoginfetcher.close();
+    _facebookLoginFetcher.close();
   }
 
 }
